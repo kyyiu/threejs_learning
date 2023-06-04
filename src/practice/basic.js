@@ -4,6 +4,8 @@ import * as Three from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 // 使用gsap动画库
 import gsap from 'gsap'
+// 
+import * as dat from 'dat.gui'
 
 // 创建时钟
 const clock = new Three.Clock()
@@ -57,43 +59,92 @@ const axesHelper = new Three.AxesHelper(5)
 sence.add(axesHelper)
 
 // 使用gsap设置动画
-gsap.to(cube.position, {x: 5, duration: 5,
-    // 重复次数， -1无限次重复
-// repeat: -1,
-// 来回运动
-// yoyo: true
-})
-gsap.to(cube.rotation, {x: 2 * Math.PI, duration: 5, ease: "power1.in", 
-onStart(){
-    console.log('动画开始')
-},
-onComplete() {
-    console.log("动画完成")
-}})
+// gsap.to(cube.position, {x: 5, duration: 5,
+//     // 重复次数， -1无限次重复
+// // repeat: -1,
+// // 来回运动
+// // yoyo: true
+// })
+// gsap.to(cube.rotation, {x: 2 * Math.PI, duration: 5, ease: "power1.in", 
+// onStart(){
+//     console.log('动画开始')
+// },
+// onComplete() {
+//     console.log("动画完成")
+// }})
+
+// window.addEventListener('dblclick', () => {
+//     console.log('mmm')
+//     const isFullScreen = window.document.fullscreenElement
+//     if (isFullScreen) {
+//         window.document.exitFullscreen()
+//         return
+//     }
+//     renderer.domElement.requestFullscreen()
+// })
+
+
+function datguiSetting() {
+   const gui = new dat.GUI()
+//    修改几何属性
+   gui.add(cube.position, 'x')
+    .min(0)
+    .max(5) 
+    .step(0.01)
+    .name('cube-x轴移动')
+    // 变化时触发
+    .onChange(v=>{})
+    // 变化完成触发
+    .onFinishChange(v=>{})
+
+    // 修改颜色
+    const c = {
+        color: "#fff000",
+        fn:() => {
+            gsap.to(cube.position, {
+                x: 5, 
+                repeat: -1,
+                duration: 2,
+                yoyo: true
+            })
+        }
+    }
+    gui.addColor(c, 'color')
+        .onChange(v=>{
+            cube.material.color.set(v)
+        })
+    // 是否显示
+    gui.add(cube, 'visible').name('是否显示')
+    // 点击按钮触发某个事件
+    gui.add(c, "fn").name('点击触发')
+    // 文件夹设置
+    const cubeFolder = gui.addFolder("设置cube")
+    cubeFolder.add(cube.material, 'wireframe')
+    cubeFolder.add(c, "fn").name('点击触发')
+}
+datguiSetting()
 
 export default function() {
   const container = useRef()
 
   useEffect(() => {
-    onFullWindow()
     windowChange()
     container.current.appendChild(renderer.domElement)
     refresh()
   }, [])
 
   function onFullWindow() {
-    window.addEventListener('dblclick', () => {
-        const isFullScreen = window.document.fullscreenElement
-        if (isFullScreen) {
-            window.document.exitFullscreen()
-            return
-        }
-        renderer.domElement.requestFullscreen()
-    })
+    const isFullScreen = document.fullscreenElement
+    if (isFullScreen) {
+        document.exitFullscreen()
+        return
+    }
+    renderer.domElement.requestFullscreen()
   }
 
   function windowChange() {
     window.addEventListener('resize', ()=>{
+        console.log('rrr')
         // 更新摄像机
         camera.aspect = window.innerWidth/window.innerHeight
         // 更新摄像机的投影矩阵
@@ -120,5 +171,5 @@ export default function() {
     window.requestAnimationFrame(refresh)
   }
 
-  return <div ref={container}></div>
+  return <div ref={container} onDoubleClick={onFullWindow}></div>
 }
