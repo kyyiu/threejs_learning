@@ -42,6 +42,12 @@ sence.add(cube)
 
 // 初始化渲染器
 const renderer = new Three.WebGLRenderer()
+// 创建轨道控制器
+// 使相机围绕目标进行轨道移动
+// 长按鼠标左键移动查看
+const controls = new OrbitControls(camera, renderer.domElement)
+// 设置阻尼，让控制器更真实, 必须在动画循环调用update方法
+controls.enableDamping = true
 // 数值渲染的尺寸
 renderer.setSize(window.innerWidth, window.innerHeight)
 // document.body.appendChild()
@@ -69,13 +75,35 @@ export default function() {
   const container = useRef()
 
   useEffect(() => {
+    onFullWindow()
+    windowChange()
     container.current.appendChild(renderer.domElement)
     refresh()
-    // 创建轨道控制器
-    // 使相机围绕目标进行轨道移动
-    // 长按鼠标左键移动查看
-    const controls = new OrbitControls(camera, renderer.domElement)
   }, [])
+
+  function onFullWindow() {
+    window.addEventListener('dblclick', () => {
+        const isFullScreen = window.document.fullscreenElement
+        if (isFullScreen) {
+            window.document.exitFullscreen()
+            return
+        }
+        renderer.domElement.requestFullscreen()
+    })
+  }
+
+  function windowChange() {
+    window.addEventListener('resize', ()=>{
+        // 更新摄像机
+        camera.aspect = window.innerWidth/window.innerHeight
+        // 更新摄像机的投影矩阵
+        camera .updateProjectionMatrix()
+        // 更新渲染器
+        renderer.setSize(window.innerWidth, window.innerHeight)
+        // 设置渲染器像素比
+        renderer.setPixelRatio(window.devicePixelRatio)
+    })
+  }
 
   //requestAnimationFrame调用 refresh 时会传入时间作为参数
   // 可以根据这个参数做一个和时间匹配的动画
@@ -87,6 +115,7 @@ export default function() {
     // const offset = passedTime % 5
     // // const offset = time / 1000 % 5
     // cube.position.x = offset
+    controls.update()
     renderer.render(sence, camera)
     window.requestAnimationFrame(refresh)
   }
