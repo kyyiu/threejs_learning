@@ -35,6 +35,10 @@ const cube = new Three.Mesh(cubeGeometry, cubeMaterial)
 // 物体缩放
 // cube.scale.set(x, y, z)
 cube.scale.x = 2
+// 0会消失，z会反过来
+// 比如vr看房这种功能
+// cube.scale.set(1, 1, -1)
+// 会让相机从内部看房的效果
 
 // 物体旋转
 // x轴旋转45°
