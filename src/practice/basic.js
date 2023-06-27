@@ -126,12 +126,12 @@ function datguiSetting() {
     cubeFolder.add(cube.material, 'wireframe')
     cubeFolder.add(c, "fn").name('点击触发')
 }
-datguiSetting()
 
 export default function() {
   const container = useRef()
 
   useEffect(() => {
+    datguiSetting()
     windowChange()
     container.current.appendChild(renderer.domElement)
     refresh()

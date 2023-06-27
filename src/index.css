@@ -3,3 +3,26 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.df {
+  display: flex;
+}
+.fdc {
+  flex-direction: column;
+}
+
+.img_size {
+  width: 200px;
+}
+
+.w100 {
+  width: 100%;
+}
+
+.jcc {
+  justify-content: center;
+}
+
+.tac {
+  text-align: center;
+}
