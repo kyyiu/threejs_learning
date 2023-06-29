@@ -10,6 +10,9 @@ body {
 .fdc {
   flex-direction: column;
 }
+.fww {
+  flex-wrap: wrap;
+}
 
 .img_size {
   width: 200px;
