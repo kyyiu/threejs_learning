@@ -19,7 +19,7 @@ function NavCom({path, imgUrl, desc}) {
 }
 
 function Home() {
-  return <div >
+  return <div className='df'>
     <NavCom 
       path={"/basic"}
       imgUrl={require('./assets/img/react_logo.png')}
