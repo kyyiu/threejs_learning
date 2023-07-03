@@ -4,6 +4,7 @@ import BasicMaterial from './practice/material/basic'
 import VrHouse from './practice/vr_house/vrHouse'
 import Hdr from './practice/vr_house/hdr'
 import Kaleidoscope from './practice/shader/kaleidoscope/kaleidoscope'
+import FireWork from './practice/shader/fireWork/fireWork'
 
 
 import { Routes, Route, Link } from "react-router-dom"
@@ -45,6 +46,10 @@ function Home() {
       path={"/kaleidoscope"}
       imgUrl={require('./assets/img/react_logo.png')}
       desc="shader实现万花筒效果"/>
+    <NavCom 
+      path={"/fire_work"}
+      imgUrl={require('./assets/img/react_logo.png')}
+      desc="shader实现烟火效果"/>
   </div>
 }
 
@@ -58,6 +63,7 @@ export default function() {
       <Route path="/buffer_gem" element={<BufferGem/>}></Route>
       <Route path="/basic_material" element={<BasicMaterial/>}></Route>
       <Route path="/kaleidoscope" element={<Kaleidoscope/>}></Route>
+      <Route path="/fire_work" element={<FireWork/>}></Route>
     </Routes>
   </div>
 }

@@ -16,8 +16,13 @@ camera.position.set(0,0,1.5)
 sence.add(camera)
 
 var geometry = new Three.PlaneGeometry( 2, 2 );
+const loader = new Three.TextureLoader();
+const texture1  = loader.load(require("../../../assets/img/react_logo.png"));
 const uniforms = {
     u_time: { type: "f", value: 1.0 },
+    iChannel0: {
+      value: texture1
+    },
     u_resolution: { type: "v2", value: new Three.Vector2() }
 };
 
