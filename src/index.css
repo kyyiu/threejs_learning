@@ -2,8 +2,9 @@ html,
 body {
   margin: 0;
   padding: 0;
+  background-color:#eeeeee;
+	color:#212121;
 }
-
 .df {
   display: flex;
 }
