@@ -32,7 +32,8 @@ export default function() {
       cube.rotation.x = Math.PI/5;
       cube.rotation.y = Math.PI/5;
       sence.add(cube)
-      renderer = new Three.WebGLRenderer({antialias: true})
+      renderer = new Three.WebGLRenderer({antialias: true, alpha: true})
+      renderer.setClearAlpha(0.5)
       addMouseHandler()
       const controls = new OrbitControls(camera, renderer.domElement)
       // 设置阻尼，让控制器更真实, 必须在动画循环调用update方法
@@ -63,7 +64,8 @@ export default function() {
   
     return <div>
       <center><h1>Welcom To WebGL</h1></center>
-      <div 
+      <div
+        id="ccc"
         style={{width: "100%", height: "90%", position: "absolute",zIndex: -1}}
         ref={container}></div>
       <div 

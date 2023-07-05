@@ -1,16 +1,24 @@
+// practice
 import Basic from './practice/basic'
 import BufferGem from './practice/bufferGem'
 import BasicMaterial from './practice/material/basic'
+// vr_house
 import VrHouse from './practice/vr_house/vrHouse'
 import Hdr from './practice/vr_house/hdr'
+// shader
 import Kaleidoscope from './practice/shader/kaleidoscope/kaleidoscope'
 import FireWork from './practice/shader/fireWork/fireWork'
+// interactive
 import ClickItem from './practice/interactive/clickItem'
+// animation
 
 
 import { Routes, Route, Link } from "react-router-dom"
 
-function NavCom({path, imgUrl, desc}) {
+function NavCom({path, imgUrl, desc, isShow}) {
+  if (isShow === false) {
+    return null;
+  }
   return <div className='df fdc img_size'>
     <Link to={path}>
       <div className='tac'>

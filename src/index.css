@@ -5,6 +5,9 @@ body {
   background-color:#eeeeee;
 	color:#212121;
 }
+#ccc {
+  background-image: url("./assets/img/ball_texture.jpg");
+}
 .df {
   display: flex;
 }
