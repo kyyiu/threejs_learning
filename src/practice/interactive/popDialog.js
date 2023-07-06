@@ -53,14 +53,25 @@ export default function() {
 
     function getObjectScreenPosition(object)
     {	
-      var pos = new Three.Vector3();
-      pos = pos.clone().applyMatrix4(object.matrix);
+      // var pos = new Three.Vector3();
+      // pos = pos.clone().applyMatrix4(object.matrix);
     
-      // const projected = pos.clone();
-      const projected = pos;
+      // // const projected = pos.clone();
+      // const projected = pos;
+      // 物体坐标转屏幕坐标
+      // 参考 https://stackoverflow.com/questions/27409074/converting-3d-position-to-2d-screen-position-r69
+      const v = new Three.Vector3();
+      object.updateMatrixWorld();
+      v.setFromMatrixPosition(object.matrixWorld)
+      v.project(camera)
+      var widthHalf = 0.5* renderer.domElement.width;
+      var heightHalf = 0.5* renderer.domElement.height;
     
-      var eltx = (1 + projected.x) * container.current.offsetWidth / 2 ;
-      var elty = (1 - projected.y) * container.current.offsetHeight / 2;
+      // var eltx = (1 + projected.x) * container.current.offsetWidth / 2 ;
+      // var elty = (1 - projected.y) * container.current.offsetHeight / 2;
+      var eltx = ( v.x * widthHalf ) + widthHalf;
+      var elty = - ( v.y * heightHalf ) + heightHalf;
+      
       var offset = renderer.domElement;	
       eltx += offset.offsetLeft;
       elty += offset.offsetTop;
@@ -82,6 +93,7 @@ export default function() {
         console.log('EEE2',curObj)
         curObj.object.material.emissive.setHex(0xff0000)
         callOut.current.style.display = 'block'
+        console.log("CCCC", (screenpos.x - callOut.current.offsetWidth / 2)+ "px",  `${screenpos.y + 100}px`)
         callOut.current.style.left = (screenpos.x - callOut.current.offsetWidth / 2)+ "px";
         callOut.current.style.top = `${screenpos.y + 100}px`
       } else {
