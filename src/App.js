@@ -10,6 +10,7 @@ import Kaleidoscope from './practice/shader/kaleidoscope/kaleidoscope'
 import FireWork from './practice/shader/fireWork/fireWork'
 // interactive
 import ClickItem from './practice/interactive/clickItem'
+import PopDialog from './practice/interactive/popDialog'
 // animation
 
 
@@ -31,6 +32,10 @@ function NavCom({path, imgUrl, desc, isShow}) {
 
 function Home() {
   return <div className='df fww'>
+    <NavCom 
+      path={"/pop_dialog"}
+      imgUrl={require('./assets/img/react_logo.png')}
+      desc="鼠标处理物体检测"/>
     <NavCom 
       path={"/click_item"}
       imgUrl={require('./assets/img/react_logo.png')}
@@ -78,6 +83,7 @@ export default function() {
       <Route path="/kaleidoscope" element={<Kaleidoscope/>}></Route>
       <Route path="/fire_work" element={<FireWork/>}></Route>
       <Route path="/click_item" element={<ClickItem/>}></Route>
+      <Route path="/pop_dialog" element={<PopDialog/>}></Route>
     </Routes>
   </div>
 }
