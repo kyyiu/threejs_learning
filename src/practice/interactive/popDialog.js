@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import * as Three from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import styles from './popDialog.module.css'
+import { coordinate } from "../../utils";
 
 const sence = new Three.Scene();
 const camera = new Three.PerspectiveCamera(
@@ -48,7 +49,7 @@ let raycaster,pointer, curObj
 export default function() {
     const container = useRef()
     const callOut = useRef()
-  
+    const titleContainer = useRef()
     useEffect(() => {
       raycaster = new Three.Raycaster()
       pointer   = new Three.Vector2()
@@ -59,6 +60,7 @@ export default function() {
 
     function getObjectScreenPosition(object)
     {	
+      return coordinate.getObjInCanvasCoordinate(object, renderer, camera)
       // var pos = new Three.Vector3();
       // pos = pos.clone().applyMatrix4(object.matrix);
     
@@ -94,15 +96,12 @@ export default function() {
       const intersects = raycaster.intersectObjects( sence.children, false );
       if (intersects.length) {
         curObj = intersects[0]
-        console.log('EEE',curObj)
         const screenpos = getObjectScreenPosition(curObj.object);
-        console.log('EEE2',curObj)
         curObj.object.material.emissive.setHex(0xff0000)
         callOut.current.style.display = 'block'
-        console.log("CCCC", (screenpos.x - callOut.current.offsetWidth / 2)+ "px",  `${screenpos.y + 100}px`)
         callOut.current.style.left = (screenpos.x - callOut.current.offsetWidth / 2)+ "px";
         callOut.current.style.top = `${screenpos.y}px`
-        callOut.current.appendChild(document.createTextNode(curObj.object.customData.html))
+        titleContainer.current.innerHTML = curObj.object.customData.html;
       } else {
         if (curObj) {
           curObj.object.material.emissive.setHex(0x0000ff)
@@ -128,7 +127,7 @@ export default function() {
       <h1 style={{display: 'none'}}>Shipster - Choose Your Ship</h1>
       <div className={styles.container}  ref={container}></div>
       <div className={styles.callout} ref={callOut}>
-        <div className={styles.header}>我是弹窗</div>
+        <div className={styles.header} ref={titleContainer}></div>
         <div className={styles.contents}>我是介绍</div>
         <div className={styles.selectButton}><button onClick={onSelectClicked}>关闭</button></div>
       </div>
