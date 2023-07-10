@@ -23,9 +23,15 @@ sence.add( light );
 const g = new Three.BoxGeometry(1, 1, 1)
 const m = new Three.MeshLambertMaterial({color: Math.random() * 0xffffff })
 const cube = new Three.Mesh(g, m)
+cube.customData = {
+  html: `<div>我是弹窗1</div>`
+}
 const g2 = new Three.BoxGeometry(1, 1, 1)
 const m2 = new Three.MeshLambertMaterial({color: Math.random() * 0xffffff })
 const cube2 = new Three.Mesh(g2, m2)
+cube2.customData = {
+  html: `<div>我是弹窗2</div>`
+}
 cube2.position.set(2,2,2)
 sence.add(cube)
 sence.add(cube2)
@@ -95,12 +101,14 @@ export default function() {
         callOut.current.style.display = 'block'
         console.log("CCCC", (screenpos.x - callOut.current.offsetWidth / 2)+ "px",  `${screenpos.y + 100}px`)
         callOut.current.style.left = (screenpos.x - callOut.current.offsetWidth / 2)+ "px";
-        callOut.current.style.top = `${screenpos.y + 100}px`
+        callOut.current.style.top = `${screenpos.y}px`
+        callOut.current.appendChild(document.createTextNode(curObj.object.customData.html))
       } else {
         if (curObj) {
           curObj.object.material.emissive.setHex(0x0000ff)
           curObj = null
         }
+        callOut.current.style.display = 'none'
       }
     }
 
