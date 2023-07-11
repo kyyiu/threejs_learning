@@ -87,9 +87,9 @@ sence.add(axesHelper)
 //     renderer.domElement.requestFullscreen()
 // })
 
-
+let gui
 function datguiSetting() {
-   const gui = new dat.GUI()
+   gui = new dat.GUI()
 //    修改几何属性
    gui.add(cube.position, 'x')
     .min(0)
@@ -135,6 +135,9 @@ export default function() {
     windowChange()
     container.current.appendChild(renderer.domElement)
     refresh()
+    return () => {
+      gui.destroy()
+    }
   }, [])
 
   function onFullWindow() {
