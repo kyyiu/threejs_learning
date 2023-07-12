@@ -6,10 +6,28 @@ import { animationRoute } from "./animation";
 import { materialRoute } from "./material";
 
 export default [
-  ...shaderRoute,
-  ...materialRoute,
-  ...interactiveRoute,
-  ...vrHouseRoute,
-  ...animationRoute,
-  ...practiceRoute
+  {
+    title: "SHADER",
+    children: shaderRoute
+  },
+  {
+    title: "MATERIAL",
+    children: materialRoute
+  },
+  {
+    title: "INTERACTIVE",
+    children: interactiveRoute
+  },
+  {
+    title: "VRHOUSE",
+    children: vrHouseRoute
+  },
+  // {
+  //   title: "ANIMATION",
+  //   children: animationRoute
+  // },
+  {
+    title: "PRACTICE",
+    children: practiceRoute
+  }
 ]
