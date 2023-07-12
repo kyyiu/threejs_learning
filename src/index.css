@@ -8,6 +8,9 @@ body {
 #ccc {
   background-image: url("./assets/img/ball_texture.jpg");
 }
+.dn {
+  display: none;
+}
 .df {
   display: flex;
 }
