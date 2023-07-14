@@ -16,14 +16,21 @@ function NavCom({path, imgUrl, desc, isShow}) {
 }
 
 function Home() {
-  return <div className='df fww'>
+  return <div>
     {
-      routeData.map((e, i) => {
-        return <NavCom 
-          key={i}
-          path={e.path}
-          imgUrl={e.img}
-          desc={e.desc}/>
+      routeData.map((t, i) => {
+        return <div>
+            <h2>{t.title}</h2>
+            <div  className='df fww'>
+            {
+              t.children.map(e => <NavCom 
+                key={i}
+                path={e.path}
+                imgUrl={e.img}
+                desc={e.desc}/>)
+            }
+            </div>
+          </div>
       })
     }
   </div>
@@ -34,7 +41,7 @@ export default function() {
     <Routes>
       <Route path="/" element={<Home/>}/>
     {
-      routeData.map((e, i) => {
+      routeData.map(e => e.children).reduce((r, c) => [...r, ...c]).map((e, i) => {
         return <Route 
           key={i}
           path={e.path}
