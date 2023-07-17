@@ -9,8 +9,9 @@ curTime,
 texture, 
 skyBackup,
 groundBackup,
-roadBackup
-
+roadBackup,
+leftrailBackup,
+rightrailBackup
 
 const Environment = {}
 Environment.SKY_WIDTH = 3000;
@@ -101,7 +102,44 @@ function createRoad() {
     sence.add( road );
     roadBackup = road;
 }
-function createGuardRails() {}
+function createGuardRails() {
+    let texture = null;	
+
+	// Guard rail by scimdia
+	// http://www.turbosquid.com/Search/Artists/scimdia
+	// http://www.turbosquid.com/FullPreview/Index.cfm/ID/365705
+	texture = (new THREE.TextureLoader()).load(require("../media/pics/Guard_Rail-rotated.jpg"))
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1, 40);
+	
+	const leftrail = new THREE.Mesh( new THREE.PlaneGeometry( Environment.RAIL_WIDTH, 
+        Environment.RAIL_LENGTH * 2), 
+        new THREE.MeshBasicMaterial( 
+        { color: 0xaaaaaa, shininess:100, ambient: 0x333333, map:texture } 
+        )
+	);
+	leftrail.rotation.x = -Math.PI/2;
+	leftrail.rotation.y = Math.PI/2;
+	leftrail.position.x = -Environment.ROAD_WIDTH / 2;
+	leftrail.position.y = .5 + Environment.GROUND_Y;
+	
+	sence.add( leftrail );
+	leftrailBackup = leftrail;
+	
+	const rightrail = new THREE.Mesh( new THREE.PlaneGeometry( Environment.RAIL_WIDTH, 
+        Environment.RAIL_LENGTH * 2), 
+        new THREE.MeshBasicMaterial( 
+        { color: 0xaaaaaa, shininess:100, ambient: 0x333333, map:texture } 
+        )
+	);
+	rightrail.rotation.x = -Math.PI/2;
+	rightrail.rotation.y = -Math.PI/2;
+	rightrail.position.x = Environment.ROAD_WIDTH / 2;
+	rightrail.position.y = .5 + Environment.GROUND_Y;
+	
+    sence.add( rightrail );
+	rightrailBackup = rightrail;
+}
 function createFinishLine() {}
 function createSigns() {}
 
