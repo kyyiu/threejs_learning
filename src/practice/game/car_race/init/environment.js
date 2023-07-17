@@ -8,7 +8,8 @@ sence,
 curTime, 
 texture, 
 skyBackup,
-groundBackup
+groundBackup,
+roadBackup
 
 
 const Environment = {}
@@ -79,7 +80,27 @@ function createGround() {
 	sence.add( ground );
 	groundBackup = ground;
 }
-function createRoad() {}
+function createRoad() {
+    let texture = null;	
+
+    // Road texture by Arenshi
+    // http://www.turbosquid.com/Search/Artists/Arenshi
+    // http://www.turbosquid.com/FullPreview/Index.cfm/ID/414729		
+    texture = (new THREE.TextureLoader()).load(require("../media/pics/road-rotated.jpg"));
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1, 40);
+
+    const road = new THREE.Mesh( new THREE.PlaneGeometry( Environment.ROAD_WIDTH, 
+            Environment.ROAD_LENGTH * 2),
+            new THREE.MeshBasicMaterial( 
+                    { color: 0xaaaaaa, shininess:100, ambient: 0x333333, map:texture } 
+            ) 
+    );
+    road.rotation.x = -Math.PI/2;
+    road.position.y = 0 + Environment.GROUND_Y;
+    sence.add( road );
+    roadBackup = road;
+}
 function createGuardRails() {}
 function createFinishLine() {}
 function createSigns() {}
