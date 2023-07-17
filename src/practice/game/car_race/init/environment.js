@@ -1,6 +1,16 @@
 import * as THREE from 'three'
 
-let textureSky, textureGround, textureFinishLine, displaySigns, sence, curTime, texture, skyBackup
+let textureSky, 
+textureGround, 
+textureFinishLine, 
+displaySigns, 
+sence, 
+curTime, 
+texture, 
+skyBackup,
+groundBackup
+
+
 const Environment = {}
 Environment.SKY_WIDTH = 3000;
 Environment.SKY_HEIGHT = 200;
@@ -42,7 +52,33 @@ function createSky() {
     sence.add( sky );
     skyBackup = sky;
 }
-function createGround() {}
+function createGround() {
+    let texture = null;
+
+	// Sand texture
+	if (textureGround)
+	{
+        const loader = new THREE.TextureLoader()
+		texture = loader.load(require("../media/pics/Sand_002.JPG"));
+	    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+	    texture.repeat.set(10, 10);
+	}
+	else
+	{
+		texture = null;
+	}
+	
+	const ground = new THREE.Mesh( new THREE.PlaneGeometry( Environment.GROUND_WIDTH, 
+			Environment.GROUND_LENGTH ), 
+			new THREE.MeshBasicMaterial( 
+			{ color: textureGround ? 0xffffff : 0xaaaaaa, ambient: 0x333333, map:texture } 
+			)
+	);
+	ground.rotation.x = -Math.PI/2;
+	ground.position.y = -.02 + Environment.GROUND_Y;
+	sence.add( ground );
+	groundBackup = ground;
+}
 function createRoad() {}
 function createGuardRails() {}
 function createFinishLine() {}
@@ -51,7 +87,6 @@ function createSigns() {}
 export default function initEnvironment(param) {
     param = param || {};
 	sence = param.sence
-	console.log("EA", param);
 	textureSky = param.textureSky;
 	textureGround = param.textureGround;
 	textureFinishLine = param.textureFinishLine;
