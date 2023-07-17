@@ -8,12 +8,16 @@ let camera
 const renderer = new Three.WebGLRenderer({alpha: true})
 // renderer.setClearAlpha = 0.5
 
-let sounds, speedometer, tachometer
+let sounds, speedometer, tachometer, mounted
 
 export default function() {
     const container = useRef()
   
     useEffect(() => {
+      if (mounted) {
+        return
+      }
+      mounted = true
       try {
         const timer = document.getElementById ('elapsedTime');
         const odometer = document.getElementById ('odometer');

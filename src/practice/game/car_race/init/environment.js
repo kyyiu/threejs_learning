@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-
 let textureSky, 
 textureGround, 
 textureFinishLine, 
@@ -167,7 +166,6 @@ function createFinishLine() {
 	sence.add( finishsign );
 	finishsignBackup = finishsign;
 }
-function createSigns() {}
 
 export default function initEnvironment(param) {
     param = param || {};
@@ -194,10 +192,6 @@ export default function initEnvironment(param) {
 	createRoad();
 	createGuardRails();
 	createFinishLine();
-	if (displaySigns)
-	{
-		createSigns();
-	}
 
 	curTime = Date.now();
 }
