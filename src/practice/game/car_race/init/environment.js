@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
+import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader'
 let textureSky, 
 textureGround, 
 textureFinishLine, 
@@ -14,6 +16,22 @@ rightrailBackup,
 finishsignBackup
 
 const CAR_LENGTH = 4.2
+const CAR_WIDTH = 1.8;
+const DEFAULT_SPEED = 100 * 1000 / 3600;
+const DEFAULT_SPEED_FACTOR = 2;
+const CAR_HEIGHT = 1.2;
+
+const RacingGame = {}
+RacingGame.COLLIDE_RADIUS = Math.sqrt(2 * CAR_WIDTH);
+RacingGame.STATE_LOADING = 0;
+RacingGame.STATE_RUNNING = 1;
+RacingGame.STATE_COMPLETE = 2;
+RacingGame.STATE_CRASHED = 3;
+RacingGame.CAR_Y = .4666;
+RacingGame.CAR_START_Z = 10;
+RacingGame.PLAYER_START_Z = 4;
+RacingGame.best_time = Number.MAX_VALUE;
+
 const Environment = {}
 Environment.SKY_WIDTH = 3000;
 Environment.SKY_HEIGHT = 200;
@@ -166,6 +184,83 @@ function createFinishLine() {
 	sence.add( finishsign );
 	finishsignBackup = finishsign;
 }
+function createSigns() {
+    // const url = require('/models/Route66obj/RT66sign.js')
+    // console.log("XXX", url)
+    const group = new THREE.Object3D;
+	const loadCallback =  function(model) { onSignLoaded(model); }
+
+	let scale = 0.7;
+	
+	scale = new THREE.Vector3(scale, scale, scale);
+	const mtlLoader = new MTLLoader()
+    mtlLoader.load(
+        require('../media/model/Nissan GTR OBJ/Objects/NissanOBJ1.mtl'),
+        (materials) => {
+            materials.preload()
+    
+            const objLoader = new OBJLoader()
+            objLoader.setMaterials(materials)
+            objLoader.load(
+                require('../media/model/Nissan GTR OBJ/Objects/NissanOBJ1.obj'),
+                (mesh) => {
+                    mesh.scale.copy(scale);
+                    mesh.doubleSided = true;
+                    // player
+                    mesh.position.set(0, RacingGame.CAR_Y + Environment.GROUND_Y, 
+                        -(Environment.ROAD_LENGTH / 2 - RacingGame.PLAYER_START_Z));
+                    // enemy
+                    // mesh.rotation.set(options.rotation.x, options.rotation.y, options.rotation.z)
+                    // mesh.scale.set(options.scale, options.scale, options.scale);
+                    // mesh.position.set(options.position.x, options.position.y, options.position.z);
+                    // var randx = (Math.random() -.5 ) * (Environment.ROAD_WIDTH - CAR_WIDTH);		
+                    // var randz = (Math.random()) * Environment.ROAD_LENGTH / 2 - RacingGame.CAR_START_Z;
+		
+                    // mesh.position.set(randx+5, RacingGame.CAR_Y + Environment.GROUND_Y, -randz)
+                    // mesh.rotation.set(-Math.PI / 2, 0, 0)
+                    sence.add(mesh)
+
+                    mesh = mesh;
+
+                    loadCallback({mesh});
+                },
+                (xhr) => {
+                    console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+                },
+                (error) => {
+                    console.log('An error happened', error)
+                }
+            )
+        },
+        (xhr) => {
+            console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+        },
+        (error) => {
+            console.log('An error happened')
+        }
+    )
+    // Tell the framework about our object
+    sence.add(group);
+}
+
+function onSignLoaded(model) {
+	for (var i = 0; i < Environment.NUM_SIGNS; i++)
+	{
+		var group = new THREE.Object3D;
+		group.position.set(5.1, Environment.GROUND_Y, (-Environment.ROAD_LENGTH / 2) + (i * Environment.ROAD_LENGTH / Environment.NUM_SIGNS));
+		var mesh = new THREE.Mesh(model.mesh.geometry, model.mesh.material);
+		group.scale.set(Environment.SIGN_SCALE, Environment.SIGN_SCALE, Environment.SIGN_SCALE);
+		group.add(mesh);
+		sence.add(group);
+
+		var group = new THREE.Object3D;
+		group.position.set(-5.1, Environment.GROUND_Y, (-Environment.ROAD_LENGTH / 2) + (i * Environment.ROAD_LENGTH / Environment.NUM_SIGNS));
+		var mesh = new THREE.Mesh(model.mesh.geometry, model.mesh.material);
+		group.scale.set(Environment.SIGN_SCALE, Environment.SIGN_SCALE, Environment.SIGN_SCALE);
+		group.add(mesh);
+		sence.add(group);
+	}
+}
 
 export default function initEnvironment(param) {
     param = param || {};
@@ -187,11 +282,15 @@ export default function initEnvironment(param) {
     const ambient = new THREE.AmbientLight( 0xffffff, 1);
 	sence.add(ambient);
 	
-	createSky();
-	createGround();
-	createRoad();
-	createGuardRails();
-	createFinishLine();
+	// createSky();
+	// createGround();
+	// createRoad();
+	// createGuardRails();
+	// createFinishLine();
+	if (displaySigns)
+	{
+		createSigns();
+	}
 
 	curTime = Date.now();
 }

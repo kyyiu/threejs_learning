@@ -2,6 +2,10 @@ import initEnvironment from "./environment";
 
 let paramSave, state, sounds, curTime, deltat, running, camera, sence
 const CAR_WIDTH = 1.8;
+const DEFAULT_SPEED = 100 * 1000 / 3600;
+const DEFAULT_SPEED_FACTOR = 2;
+const CAR_LENGTH = 4.2; // Supposedly, average car length
+const CAR_HEIGHT = 1.2;
 const RacingGame = {}
 RacingGame.COLLIDE_RADIUS = Math.sqrt(2 * CAR_WIDTH);
 RacingGame.STATE_LOADING = 0;
