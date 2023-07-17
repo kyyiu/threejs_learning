@@ -11,8 +11,10 @@ skyBackup,
 groundBackup,
 roadBackup,
 leftrailBackup,
-rightrailBackup
+rightrailBackup,
+finishsignBackup
 
+const CAR_LENGTH = 4.2
 const Environment = {}
 Environment.SKY_WIDTH = 3000;
 Environment.SKY_HEIGHT = 200;
@@ -140,7 +142,31 @@ function createGuardRails() {
     sence.add( rightrail );
 	rightrailBackup = rightrail;
 }
-function createFinishLine() {}
+function createFinishLine() {
+    let texture = null;	
+
+	if (textureFinishLine)
+	{
+		texture = (new THREE.TextureLoader()).load(require("../media/pics/game-finish-line.png"))
+	}
+	else
+	{
+		texture = null;
+	}
+		
+	const finishsign = new THREE.Mesh( new THREE.PlaneGeometry( Environment.FINISH_SIGN_WIDTH, 
+        Environment.FINISH_SIGN_HEIGHT ), 
+        new THREE.MeshBasicMaterial( 
+        { color: textureFinishLine ? 0xFFFFFF : 0xaaaaaa, 
+                shininess:100, ambient: 0x333333, map:texture } 
+        )
+	);
+	finishsign.position.z = -Environment.ROAD_LENGTH / 2 - CAR_LENGTH * 2;
+	finishsign.position.y = Environment.FINISH_SIGN_Y + Environment.GROUND_Y;
+	
+	sence.add( finishsign );
+	finishsignBackup = finishsign;
+}
 function createSigns() {}
 
 export default function initEnvironment(param) {

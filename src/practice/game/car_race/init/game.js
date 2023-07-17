@@ -1,8 +1,9 @@
 import initEnvironment from "./environment";
 
 let paramSave, state, sounds, curTime, deltat, running, camera, sence
+const CAR_WIDTH = 1.8;
 const RacingGame = {}
-// RacingGame.COLLIDE_RADIUS = Math.sqrt(2 * Car.CAR_WIDTH);
+RacingGame.COLLIDE_RADIUS = Math.sqrt(2 * CAR_WIDTH);
 RacingGame.STATE_LOADING = 0;
 RacingGame.STATE_RUNNING = 1;
 RacingGame.STATE_COMPLETE = 2;
