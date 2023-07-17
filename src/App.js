@@ -1,5 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom"
 import routeData from './router'
+import { Suspense } from "react";
 
 function NavCom({path, imgUrl, desc, isShow}) {
   if (isShow === false) {
@@ -18,12 +19,12 @@ function NavCom({path, imgUrl, desc, isShow}) {
 function Home() {
   return <div>
     {
-      routeData.map((t, i) => {
-        return <div>
+      routeData.map((t, idx) => {
+        return <div key={idx}>
             <h2>{t.title}</h2>
             <div  className='df fww'>
             {
-              t.children.map(e => <NavCom 
+              t.children.map((e, i) => <NavCom 
                 key={i}
                 path={e.path}
                 imgUrl={e.img}
@@ -45,8 +46,12 @@ export default function() {
         return <Route 
           key={i}
           path={e.path}
-          element={e.ele}/>
-      })
+          element={
+            <Suspense fallback={'loading'}>
+              <e.ele/>
+            </Suspense>
+          }/>
+        })
     }
     </Routes>
   </div>
