@@ -4,30 +4,35 @@ import { shaderRoute } from "./shader";
 import { interactiveRoute } from "./interactive";
 import { animationRoute } from "./animation";
 import { materialRoute } from "./material";
+import { gameRoute } from "./game";
 
 export default [
   {
-    title: "SHADER",
+    title: 'Game',
+    children: gameRoute
+  },
+  {
+    title: 'Shader',
     children: shaderRoute
   },
   {
-    title: "MATERIAL",
+    title: 'Material',
     children: materialRoute
   },
   {
-    title: "INTERACTIVE",
+    title: 'Interactive',
     children: interactiveRoute
   },
   {
-    title: "VRHOUSE",
+    title: 'vrHouse',
     children: vrHouseRoute
   },
   // {
-  //   title: "ANIMATION",
+  //   title: 'Animation',
   //   children: animationRoute
   // },
   {
-    title: "PRACTICE",
+    title: 'Practice',
     children: practiceRoute
   }
 ]

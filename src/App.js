@@ -1,5 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom"
 import routeData from './router'
+import { Suspense } from "react";
 
 function NavCom({path, imgUrl, desc, isShow}) {
   if (isShow === false) {
@@ -16,21 +17,21 @@ function NavCom({path, imgUrl, desc, isShow}) {
 }
 
 function Home() {
-  return <div style={{paddingBottom: '20px'}}>
+  return <div>
     {
-      routeData.map((t, i) => {
-        return <div>
-          <h2>{t.title}</h2>
-          <div className="df fww">
-          {
-            t.children.map((e, i) => <NavCom 
-              key={i}
-              path={e.path}
-              imgUrl={e.img}
-              desc={e.desc}/>)
-          }
+      routeData.map((t, idx) => {
+        return <div key={idx}>
+            <h2>{t.title}</h2>
+            <div  className='df fww'>
+            {
+              t.children.map((e, i) => <NavCom 
+                key={i}
+                path={e.path}
+                imgUrl={e.img}
+                desc={e.desc}/>)
+            }
+            </div>
           </div>
-        </div>
       })
     }
   </div>
@@ -41,12 +42,16 @@ export default function() {
     <Routes>
       <Route path="/" element={<Home/>}/>
     {
-      routeData.reduce((res, cur) => [...res, ...cur.children], []).map((e, i) => {
+      routeData.map(e => e.children).reduce((r, c) => [...r, ...c]).map((e, i) => {
         return <Route 
           key={i}
           path={e.path}
-          element={e.ele}/>
-      })
+          element={
+            <Suspense fallback={'loading'}>
+              <e.ele/>
+            </Suspense>
+          }/>
+        })
     }
     </Routes>
   </div>
