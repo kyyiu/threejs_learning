@@ -2,11 +2,14 @@ import React, { useEffect, useRef } from "react";
 import * as Three from 'three'
 import styles from './main.module.css'
 import { initGame, initSound } from "./init";
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
 const sence = new Three.Scene();
 let camera
 const renderer = new Three.WebGLRenderer({alpha: true})
 // renderer.setClearAlpha = 0.5
+const axesHelper = new Three.AxesHelper(5)
+sence.add(axesHelper)
 
 let sounds, speedometer, tachometer, mounted
 
@@ -26,6 +29,9 @@ export default function() {
         sounds = initSound() 
         camera = new Three.PerspectiveCamera(45, container.current.offsetWidth / container.current.offsetHeight, 1, 10000)
         camera.position.set( 0, 0, 3.3333 );
+        const controls = new OrbitControls(camera, renderer.domElement)
+        // 设置阻尼，让控制器更真实, 必须在动画循环调用update方法
+        controls.enableDamping = true
         sence.add(camera)
         initGame({
           sence,

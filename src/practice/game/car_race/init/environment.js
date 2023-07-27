@@ -190,25 +190,24 @@ function createSigns() {
     const group = new THREE.Object3D;
 	const loadCallback =  function(model) { onSignLoaded(model); }
 
-	let scale = 0.7;
+	let scale = 0.3;
 	
 	scale = new THREE.Vector3(scale, scale, scale);
 	const mtlLoader = new MTLLoader()
     mtlLoader.load(
-        require('../media/model/Nissan GTR OBJ/Objects/NissanOBJ1.mtl'),
+        require('../media/model/Nova Car/NovaCar.mtl'),
         (materials) => {
             materials.preload()
     
             const objLoader = new OBJLoader()
             objLoader.setMaterials(materials)
             objLoader.load(
-                require('../media/model/Nissan GTR OBJ/Objects/NissanOBJ1.obj'),
+                require('../media/model/Nova Car/NovaCar.obj'),
                 (mesh) => {
                     mesh.scale.copy(scale);
                     mesh.doubleSided = true;
-                    // player
-                    mesh.position.set(0, RacingGame.CAR_Y + Environment.GROUND_Y, 
-                        -(Environment.ROAD_LENGTH / 2 - RacingGame.PLAYER_START_Z));
+                    mesh.position.set(0, 0, 0);
+                    mesh.rotation.set(-Math.PI/2,0,0)
                     // enemy
                     // mesh.rotation.set(options.rotation.x, options.rotation.y, options.rotation.z)
                     // mesh.scale.set(options.scale, options.scale, options.scale);

@@ -10,6 +10,8 @@ const camera = new Three.PerspectiveCamera(
     0.1,
     1000
 )
+// 0xffffff使用的是颜色的十六进制表示法，代表白色。1代表的是near（近处）属性值，10代表的是far（远处）属性值。这两个属性确定了雾化效果的起始位置以及浓度加深的程度。
+sence.fog = new Three.Fog(0xffffff, 1, 10)
 
 camera.position.set(0,0,10)
 sence.add(camera)
