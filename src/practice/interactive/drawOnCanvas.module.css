@@ -1,0 +1,54 @@
+.canvas0 {
+  position: absolute;
+  background-color: #ffffff;
+  top: 10%;
+  right: 80%;
+  z-index: 6000;
+  display: none;
+  cursor: crosshair;
+}
+.canvas1 {
+  position: absolute;
+  background-color: #000000;
+  top: 10%;
+  right: 80%;
+  display: none;
+  z-index: 6000;
+  cursor: crosshair;
+}
+.canvas2 {
+  position: absolute;
+  background-color: #000000;
+  top: 10%;
+  right: 80%;
+  display: none;
+  z-index: 6000;
+  cursor: crosshair;
+}
+.canvas3 {
+  position: absolute;
+  background-color: #000000;
+  top: 10%;
+  right: 80%;
+  display: none;
+  z-index: 6000;
+  cursor: crosshair;
+}
+.canvas4 {
+  position: absolute;
+  background-color: #000000;
+  top: 10%;
+  right: 80%;
+  display: none;
+  z-index: 6000;
+  cursor: crosshair;
+}
+.canvas5 {
+  position: absolute;
+  background-color: #000000;
+  top: 10%;
+  right: 80%;
+  display: block;
+  z-index: 6000;
+  cursor: crosshair;
+}

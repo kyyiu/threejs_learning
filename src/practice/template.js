@@ -23,9 +23,19 @@ export default function() {
     const container = useRef()
   
     useEffect(() => {
+      window.addEventListener( 'resize', onWindowResize, false );//窗口变化监听
       container.current.appendChild(renderer.domElement)
       refresh()
     }, [])
+
+    function onWindowResize() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      camera.aspect = width / height;//获得当前摄像机缩放比
+      camera.updateProjectionMatrix();//更新矩阵
+      renderer.setSize( width, height );
+    }
 
     function refresh(time) {
       renderer.render(sence, camera)
