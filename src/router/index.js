@@ -5,11 +5,16 @@ import { interactiveRoute } from "./interactive";
 import { animationRoute } from "./animation";
 import { materialRoute } from "./material";
 import { gameRoute } from "./game";
+import { particleRoute } from './particle'
 
 export default [
   {
     title: 'Game',
     children: gameRoute
+  },
+  {
+    title: 'Particle',
+    children: particleRoute
   },
   {
     title: 'Shader',
