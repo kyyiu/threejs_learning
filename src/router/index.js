@@ -32,10 +32,10 @@ export default [
     title: 'vrHouse',
     children: vrHouseRoute
   },
-  // {
-  //   title: 'Animation',
-  //   children: animationRoute
-  // },
+  {
+    title: 'Animation',
+    children: animationRoute
+  },
   {
     title: 'Practice',
     children: practiceRoute
