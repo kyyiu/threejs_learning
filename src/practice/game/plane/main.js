@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import * as Three from 'three'
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader"
 import { Player } from "./Player";
+import styles from './plane.module.css'
 
 const sence = new Three.Scene();
 const camera = new Three.PerspectiveCamera(
@@ -31,6 +32,11 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 export default function() {
     const clock = new Three.Clock()
     let player
+    const info = {
+      spaceKey:false,
+      active: false,
+      sence
+    }
     const container = useRef()
   
     useEffect(() => {
@@ -38,12 +44,45 @@ export default function() {
       container.current.appendChild(renderer.domElement)
       init()
       refresh()
+      return () => {
+        document.removeEventListener('keydown', keyDown)
+        document.removeEventListener('keyup', keyUp)
+      }
     }, [])
 
     function init() {
       setEnvironment()
       initSkyBox()
       initPlayer()
+      initEvent()
+    }
+
+    function initEvent() {
+      document.addEventListener('keydown', keyDown)
+      document.addEventListener('keyup', keyUp)
+      container.current.addEventListener('mousedown', mouseDown)
+      container.current.addEventListener('mouseup', mouseup)
+    }
+
+    function mouseDown() {
+      info.spaceKey = true
+    }
+
+    function mouseup() {
+      info.spaceKey = false
+    }
+
+    function keyDown(e) {
+      switch (e.keyCode) {
+        case 32:
+          info.spaceKey = true
+      }
+    }
+    function keyUp(e) {
+      switch (e.keyCode) {
+        case 32:
+          info.spaceKey = false
+      }
     }
     
     function initSkyBox() {
@@ -59,9 +98,7 @@ export default function() {
     }
 
     function initPlayer() {
-      player = new Player({
-        sence,
-      })
+      player = new Player(info)
     }
 
     function setEnvironment() {
@@ -72,7 +109,6 @@ export default function() {
         const envMap = pmremGenerator.fromEquirectangular(t).texture
         pmremGenerator.dispose()
         sence.environment = envMap
-        console.log("TTT", envMap)
       }, undefined, e => {
         console.log('EEEE', e)
       })
@@ -103,5 +139,19 @@ export default function() {
       window.requestAnimationFrame(refresh)
     }
   
-    return <div ref={container}></div>
+    function start() {
+        const instructions = document.getElementById('instructions');
+        const btn = document.getElementById('playBtn');
+
+        instructions.style.display = 'none';
+        btn.style.display = 'none';
+
+        info.active = true;
+    }
+
+    return <div>
+      <p className={styles.instructions} id="instructions">操作：长按空格或者鼠标</p>
+      <button className={styles.playBtn} id="playBtn" onClick={start}>开始</button>
+      <div ref={container}></div>
+    </div>
   }
