@@ -8,6 +8,7 @@ camera.position.z = 5;
 
 const geometry = new Three.SphereGeometry(5, 32, 32)
 const pic = require("./hdr/h.hdr")
+// const pic = require("../../assets/gameSource/hdr/venice_sunset_1k.hdr")
 const texture = new RGBELoader().load(pic, (t) => {
   const m = new Three.MeshBasicMaterial({map: t})
   const sp = new Three.Mesh(geometry, m);

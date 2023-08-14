@@ -33,8 +33,6 @@ export default function() {
     const container = useRef()
   
     useEffect(() => {
-      if (mounted) return
-      mounted = true
       window.addEventListener( 'resize', onWindowResize, false );//窗口变化监听
       addControls()
       addLight()
@@ -57,15 +55,15 @@ export default function() {
       controls.addEventListener("change", function() {
         moveFlag = true // 鼠标移动物体， 标志修改
       })
-      window.addEventListener('mousedown', function() {
+      container.current.addEventListener('mousedown', function() {
         moveFlag=false // 鼠标点击
       })
-      window.addEventListener('mouseup', function() {
+      container.current.addEventListener('mouseup', function() {
         mouseCollect()
       })
       setTimeout(() => {
-        window.addEventListener('mousemove', mouseMove)
-        window.addEventListener('touchmove', mouseMove)
+        container.current.addEventListener('mousemove', mouseMove)
+        container.current.addEventListener('touchmove', mouseMove)
       }, 70);
     }
     function mouseMove(e) {
@@ -162,7 +160,6 @@ export default function() {
     function mouseCollect() {
       ray.setFromCamera(mousePoint, camera)
       const interSection = ray.intersectObjects(sence.children)
-      console.log("TTT", interSection)
       setTimeout(() => {
         if (interSection.length > 0) {
           const name = interSection[0].object.name
