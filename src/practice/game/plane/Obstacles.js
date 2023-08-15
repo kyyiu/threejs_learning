@@ -77,6 +77,44 @@ class Obstacles {
       child.visible = true;
     });
   }
+
+  update(pos) {
+    let collisionObstacle;
+
+    this.obstacles.forEach(obstacle => {
+      obstacle.children[0].rotateY(0.01);
+      const relativePosZ = obstacle.position.z - pos.z;
+      if (Math.abs(relativePosZ) < 2 && !obstacle.userData.hit) {
+        collisionObstacle = obstacle;
+      }
+      if (relativePosZ < -20) {
+        this.respawnObstacle(obstacle);
+      }
+    });
+
+
+    if (collisionObstacle !== undefined) {
+      collisionObstacle.children.some(child => {
+        child.getWorldPosition(this.tmpPos);
+        const dist = this.tmpPos.distanceToSquared(pos);
+        if (dist < 5) {
+          collisionObstacle.userData.hit = true;
+          this.hit(child);
+          return true;
+        }
+      })
+
+    }
+  }
+
+  hit(obj) {
+    if (obj.name == 'star') {
+      this.game.incScore();
+    } else {
+      this.game.decLives();
+    }
+    obj.visible = false;
+  }
 }
 
 export { Obstacles }

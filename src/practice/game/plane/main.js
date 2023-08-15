@@ -52,11 +52,37 @@ export default function() {
     }, [])
 
     function init() {
+      info.incScore = incScore
+      info.decLives = decLives
       setEnvironment()
       initSkyBox()
       initPlayer()
       initObstacles()
       initEvent()
+    }
+
+    function incScore() {
+      info.score++
+      const elm = document.getElementById('score')
+      elm.innerHTML = info.score
+    }
+
+    function decLives() {
+      info.lives--
+      const elm = document.getElementById("lives")
+      elm.innerHTML = info.lives
+      if (info.lives <= 0) {
+        gameOver()
+      }
+    }
+
+    function gameOver() {
+      info.active = false
+      const gameover = document.getElementById('gameover')
+      const btn = document.getElementById('playBtn')
+
+      gameover.style.display = 'block'
+      btn.style.display = 'block'
     }
 
     function initObstacles() {
@@ -140,6 +166,9 @@ export default function() {
     function refresh() {
       const time = clock.getElapsedTime()
       player.update(time)
+      if (info.active) {
+        obstacles.update(player.position)
+      }
       updateCamera()
       renderer.render(sence, camera)
       window.requestAnimationFrame(refresh)
