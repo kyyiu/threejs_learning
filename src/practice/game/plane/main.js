@@ -3,6 +3,7 @@ import * as Three from 'three'
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader"
 import { Player } from "./Player";
 import styles from './plane.module.css'
+import { Obstacles } from "./Obstacles";
 
 const sence = new Three.Scene();
 const camera = new Three.PerspectiveCamera(
@@ -31,7 +32,7 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 
 export default function() {
     const clock = new Three.Clock()
-    let player
+    let player, obstacles
     const info = {
       spaceKey:false,
       active: false,
@@ -54,7 +55,12 @@ export default function() {
       setEnvironment()
       initSkyBox()
       initPlayer()
+      initObstacles()
       initEvent()
+    }
+
+    function initObstacles() {
+      obstacles = new Obstacles(info)
     }
 
     function initEvent() {
@@ -142,9 +148,23 @@ export default function() {
     function start() {
         const instructions = document.getElementById('instructions');
         const btn = document.getElementById('playBtn');
+        const gameover = document.getElementById("gameover")
 
+        gameover.style.display = 'none'
         instructions.style.display = 'none';
         btn.style.display = 'none';
+
+        info.score = 0
+        info.lives = 3
+
+        const elm = document.getElementById('score')
+        elm.innerHTML = info.score
+        const elm2 = document.getElementById('lives')
+        elm2.innerHTML = info.lives
+
+
+        player.reset()
+        obstacles.reset()
 
         info.active = true;
     }
@@ -157,7 +177,7 @@ export default function() {
           <div id="lives" className={styles.lives}>3</div>
         </div>
         <div id="score_panel" className={styles.score_panel}>
-          <div className={styles.score}>0</div>
+          <div className={styles.score} id="score">0</div>
           <img className={styles.info_img} src={require("../../../assets/gameSource/plane/star-icon.png")}/>
         </div>
       </div>
