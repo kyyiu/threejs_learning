@@ -72,7 +72,7 @@ export default function() {
       const elm = document.getElementById("lives")
       elm.innerHTML = info.lives
       if (info.lives <= 0) {
-        gameOver()
+        setTimeout(gameOver, 1200);
       }
     }
 
@@ -83,6 +83,8 @@ export default function() {
 
       gameover.style.display = 'block'
       btn.style.display = 'block'
+
+      player.visible = false
     }
 
     function initObstacles() {
@@ -164,10 +166,11 @@ export default function() {
     }
 
     function refresh() {
+      const dt = clock.getDelta();
       const time = clock.getElapsedTime()
       player.update(time)
       if (info.active) {
-        obstacles.update(player.position)
+        obstacles.update(player.position, dt)
       }
       updateCamera()
       renderer.render(sence, camera)

@@ -35,6 +35,7 @@ class Player {
 
   reset() {
     this.plane.position.set(0, 0, 0);
+    this.plane.visible = true;
     this.velocity.set(0,0,0.1);
   }
 

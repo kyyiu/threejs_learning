@@ -1,6 +1,6 @@
 import { Vector3, Group } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-
+import { Explosion } from './Explosion.js';
 class Obstacles {
   constructor(game) {
     this.game = game
@@ -8,6 +8,7 @@ class Obstacles {
     this.loadStart()
     this.loadBomb()
     this.tmpPos = new Vector3()
+    this.explosions = [];
   }
 
   loadStart() {
@@ -64,7 +65,17 @@ class Obstacles {
   reset() {
     this.obstacleSpawn = { pos: 20, offset: 5 };
     this.obstacles.forEach(obstacle => this.respawnObstacle(obstacle));
+    let count;
+        while( this.explosions.length>0 && count<100){
+            this.explosions[0].onComplete();
+            count++;
+        }
   }
+
+  removeExplosion( explosion ){
+    const index = this.explosions.indexOf( explosion );
+    if (index != -1) this.explosions.indexOf(index, 1);
+}
 
   respawnObstacle(obstacle) {
     this.obstacleSpawn.pos += 30;
@@ -109,11 +120,12 @@ class Obstacles {
 
   hit(obj) {
     if (obj.name == 'star') {
+      obj.visible = false;
       this.game.incScore();
     } else {
+      this.explosions.push( new Explosion(obj, this) );
       this.game.decLives();
     }
-    obj.visible = false;
   }
 }
 
