@@ -151,6 +151,17 @@ export default function() {
 
     return <div>
       <p className={styles.instructions} id="instructions">操作：长按空格或者鼠标</p>
+      <div id="info" className={styles.info}>
+        <div id="life" className={styles.life}>
+          <img className={styles.info_img} src={require("../../../assets/gameSource/plane/plane-icon.png")}/>
+          <div id="lives" className={styles.lives}>3</div>
+        </div>
+        <div id="score_panel" className={styles.score_panel}>
+          <div className={styles.score}>0</div>
+          <img className={styles.info_img} src={require("../../../assets/gameSource/plane/star-icon.png")}/>
+        </div>
+      </div>
+      <p id="gameover" className={styles.gameover}>Game Over</p>
       <button className={styles.playBtn} id="playBtn" onClick={start}>开始</button>
       <div ref={container}></div>
     </div>
