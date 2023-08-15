@@ -36,7 +36,8 @@ export default function() {
     const info = {
       spaceKey:false,
       active: false,
-      sence
+      sence,
+      sounds: {}
     }
     const container = useRef()
   
@@ -48,6 +49,9 @@ export default function() {
       return () => {
         document.removeEventListener('keydown', keyDown)
         document.removeEventListener('keyup', keyUp)
+        stopAllAudio()
+        sence.remove(player.plane)
+        obstacles.unMount()
       }
     }, [])
 
@@ -59,12 +63,61 @@ export default function() {
       initPlayer()
       initObstacles()
       initEvent()
+      loadAudio()
+    }
+
+    function loadAudio() {
+      const list = [
+        {tag: 'explosion', path: require("../../../assets/gameSource/plane/explosion.mp3")},
+        {tag: 'engine', path: require("../../../assets/gameSource/plane/engine.mp3"), loop: true},
+        {tag: 'gliss', path: require("../../../assets/gameSource/plane/gliss.mp3")},
+        {tag: 'gameover', path: require("../../../assets/gameSource/plane/gameover.mp3")},
+        {tag: 'bonus', path: require("../../../assets/gameSource/plane/bonus.mp3")}
+      ]
+      const listener = new Three.AudioListener()
+      camera.add(listener)
+      list.forEach( e => {
+        const sound = new Three.Audio(listener)
+        info.sounds[e.tag] = sound
+        const audioLoader = new Three.AudioLoader().load(e.path, data => {
+          sound.setBuffer(data)
+          sound.setLoop(!!e.loop)
+          sound.setVolume(0.5)
+        })
+      })
+    }
+
+    function stopAllAudio() {
+      const data = info.sounds
+      for (const k in data) {
+        if (data[k] && data[k].isPlaying) {
+          data[k].stop()
+        }
+      }
+    }
+
+    function playAudio(name) {
+      const soundData = info.sounds[name]
+      if (soundData !== undefined ) {
+        if (soundData.isPlaying) {
+          soundData.stop()
+        }
+        soundData.play()
+      }
     }
 
     function incScore() {
       info.score++
       const elm = document.getElementById('score')
-      elm.innerHTML = info.score
+
+      if (info.score%3===0) {
+        info.bonusScore += 3
+        playAudio('bonus')
+      } else {
+        playAudio('gliss')
+      }
+
+      elm.innerHTML = info.score + info.bonusScore
     }
 
     function decLives() {
@@ -74,6 +127,7 @@ export default function() {
       if (info.lives <= 0) {
         setTimeout(gameOver, 1200);
       }
+      playAudio('explosion')
     }
 
     function gameOver() {
@@ -85,6 +139,9 @@ export default function() {
       btn.style.display = 'block'
 
       player.visible = false
+
+      stopAllAudio()
+      playAudio('gameover')
     }
 
     function initObstacles() {
@@ -187,6 +244,7 @@ export default function() {
         btn.style.display = 'none';
 
         info.score = 0
+        info.bonusScore = 0
         info.lives = 3
 
         const elm = document.getElementById('score')
@@ -199,6 +257,8 @@ export default function() {
         obstacles.reset()
 
         info.active = true;
+
+        playAudio('engine')
     }
 
     return <div>

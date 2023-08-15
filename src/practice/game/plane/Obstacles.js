@@ -127,6 +127,12 @@ class Obstacles {
       this.game.decLives();
     }
   }
+
+  unMount() {
+    for (const item of this.obstacles) {
+      this.sence.remove(item)
+    }
+  }
 }
 
 export { Obstacles }
