@@ -6,8 +6,13 @@ import { animationRoute } from "./animation";
 import { materialRoute } from "./material";
 import { gameRoute } from "./game";
 import { particleRoute } from './particle'
+import { comprehensiveRoute } from "./comprehensive";
 
 export default [
+  {
+    title: '综合练习',
+    children: comprehensiveRoute
+  },
   {
     title: 'Game',
     children: gameRoute
