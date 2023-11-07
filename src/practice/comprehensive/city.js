@@ -49,12 +49,19 @@ export default function () {
     })
     const hdrLoader = new RGBELoader()
     hdrLoader.loadAsync(require('../vr_house/hdr/h.hdr')).then(texture => {
-      sence.background = texture
-      sence.environment = texture
+      sence.background = texture // 类似天空盒子
+      sence.environment = texture //纹理贴图将会被设为场景中所有物理材质的环境贴图
+      // 环境映射，用于等距圆柱投影的环境贴图，也被叫做经纬线映射贴图。
+      // 等距圆柱投影贴图表示沿着其水平中线360°的视角，以及沿着其垂直轴向180°的视角。
+      // 贴图顶部和底部的边缘分别对应于它所映射的球体的北极和南极。
       sence.environment.mapping = Three.EquirectangularReflectionMapping
     })
     renderer.shadowMap.enabled = true
+    // hdr环境贴图
+    // renderer.toneMapping = THREE.NoToneMapping
+    // 普通环境贴图
     renderer.toneMapping = Three.ACESFilmicToneMapping
+    // 光照渲染强度
     renderer.toneMappingExposure = 1.5
     initLight()
   }
@@ -100,7 +107,7 @@ export default function () {
 
   return <div style={{position: 'relative'}}>
     <div ref={container} onClick={handleClick}></div>
-    <div className="panel" style={{position: 'absolute', right: 0, top: 0, height: '300px', width: '200px', overflow: 'auto', background: '#fff'}}>
+    <div className="panel" style={{position: 'absolute', right: 0, top: 0, height: '250px', width: '200px', overflow: 'auto', background: 'rgba(255,255,255, .8)'}}>
       <div>点击记录</div>
       {
         clicked.map((e, i) => {
