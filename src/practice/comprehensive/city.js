@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
+import gsap from "gsap";
 
 const sence = new Three.Scene();
 const camera = new Three.PerspectiveCamera(
@@ -27,6 +28,7 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 const self = {}
 export default function () {
   const container = useRef()
+  const [hotballAni, setHotballAni] = useState(0)
   const [clicked, setClicked] = useState([])
   useEffect(() => {
     self.clock = new Three.Clock()
@@ -48,7 +50,8 @@ export default function () {
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('./draco/')
     self.loader.setDRACOLoader(dracoLoader)
-    self.loader.load('/model/city3.glb', gltf => {
+    self.loader.load('/model/city4.glb', gltf => {
+      self.gltf = gltf
       sence.add(gltf.scene)
       gltf.scene.traverse(child => {
         if (child.name === '热气球'){
@@ -56,6 +59,24 @@ export default function () {
           self.clip = gltf.animations[0]
           self.action = self.mixer.clipAction(self.clip)
           self.action.play()
+        }
+        if (child.name === '汽车园区轨迹') {
+          const line = child
+          // 根据点创建曲线
+          const points = []
+          for (let i = line.geometry.attributes.position.count - 1; i>=0; i--) {
+            points.push(new Three.Vector3(
+              line.geometry.attributes.position.getX(i),
+              line.geometry.attributes.position.getY(i),
+              line.geometry.attributes.position.getZ(i)
+            ))
+          }
+          self.curve = new Three.CatmullRomCurve3(points)
+          self.curveProgress = 0
+          carAni()
+        }
+        if (child.name === 'redcar') {
+          self.redcar = child
         }
       })
     })
@@ -83,6 +104,34 @@ export default function () {
     light.position.set(10,100,10)
   }
 
+  function toggleHotBallAction() {
+    setHotballAni((cur) => {
+      const next = +(!cur)
+      self.action.stop()
+      self.action.reset()
+      self.clip = self.gltf.animations[next]
+      self.action = self.mixer.clipAction(self.clip)
+      self.action.play()
+      return next
+    })
+  }
+
+  function carAni() {
+    gsap.to(self, {
+      curveProgress: 0.999,
+      duration: 10,
+      repeat: -1,
+      onUpdate: () => {
+        const point = self.curve.getPoint(self.curveProgress)
+        self.redcar.position.set(point.x, point.y,point.z)
+        if (self.curveProgress + 0.001 < 1) {
+          const point = self.curve.getPoint(self.curveProgress + 0.001)
+          self.redcar.lookAt(point)
+        }
+      }
+    })
+  }
+
   function onWindowResize() {
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -97,7 +146,7 @@ export default function () {
   function refresh(time) {
     if (self.mixer) {
       const t = self.clock.getDelta()
-      self.mixer.update(t * 2)
+      self.mixer.update(t * 12)
     }
     renderer.render(sence, camera)
     window.requestAnimationFrame(refresh)
@@ -121,15 +170,22 @@ export default function () {
     console.log("click---", intersects)
   }
 
-  return <div style={{position: 'relative'}}>
+  return <div style={{position: 'relative', userSelect: 'none'}}>
     <div ref={container} onClick={handleClick}></div>
-    <div className="panel" style={{position: 'absolute', right: 0, top: 0, height: '250px', width: '200px', overflow: 'auto', background: 'rgba(255,255,255, .8)'}}>
-      <div>点击记录</div>
-      {
-        clicked.map((e, i) => {
-          return <div key={i}>点击了{e}</div>
-        })
-      }
+    <div style={{position: 'absolute', right: 0, top: 0, width: '200px'}}>
+      <div className="panel" style={{height: '250px', overflow: 'auto', background: 'rgba(255,255,255, .8)'}}>
+        <div>点击记录</div>
+        {
+          clicked.map((e, i) => {
+            return <div key={i}>点击了{e}</div>
+          })
+        }
+      </div>
+      <div style={{height: '4px'}}></div>
+      <div style={{background: 'rgba(255,255,255, .8)', cursor: 'pointer'}} onClick={toggleHotBallAction}>
+        切换热气球动画(当前{hotballAni ? '环绕' : '横穿'})
+      </div>
     </div>
+    
   </div>
 }
