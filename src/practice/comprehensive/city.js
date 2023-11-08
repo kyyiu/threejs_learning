@@ -29,10 +29,14 @@ export default function () {
   const container = useRef()
   const [clicked, setClicked] = useState([])
   useEffect(() => {
+    self.clock = new Three.Clock()
     window.addEventListener('resize', onWindowResize, false);//窗口变化监听
     init()
     container.current.appendChild(renderer.domElement)
     refresh()
+    return () => {
+      self = {}
+    }
   }, [])
   useEffect(() => {
     const div = document.querySelector('.panel'); 
@@ -44,8 +48,16 @@ export default function () {
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('./draco/')
     self.loader.setDRACOLoader(dracoLoader)
-    self.loader.load('/model/city.glb', gltf => {
+    self.loader.load('/model/city3.glb', gltf => {
       sence.add(gltf.scene)
+      gltf.scene.traverse(child => {
+        if (child.name === '热气球'){
+          self.mixer = new Three.AnimationMixer(child)
+          self.clip = gltf.animations[0]
+          self.action = self.mixer.clipAction(self.clip)
+          self.action.play()
+        }
+      })
     })
     const hdrLoader = new RGBELoader()
     hdrLoader.loadAsync(require('../vr_house/hdr/h.hdr')).then(texture => {
@@ -83,6 +95,10 @@ export default function () {
   }
 
   function refresh(time) {
+    if (self.mixer) {
+      const t = self.clock.getDelta()
+      self.mixer.update(t * 2)
+    }
     renderer.render(sence, camera)
     window.requestAnimationFrame(refresh)
   }
