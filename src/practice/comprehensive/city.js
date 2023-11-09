@@ -21,13 +21,23 @@ const renderer = new Three.WebGLRenderer({
   antialias: true, // 抗锯齿
   logarithmicDepthBuffer: true, // 防止地面和物体过近出现闪烁
 })
-const controls = new OrbitControls(camera, renderer.domElement)
+
+renderer.setSize(window.innerWidth, window.innerHeight)
+const self = {
+  camera
+}
+
+const cameraDic = {
+  default: camera
+}
+
+const controls = new OrbitControls(self.camera, renderer.domElement)
 // 设置阻尼，让控制器更真实, 必须在动画循环调用update方法
 controls.enableDamping = true
-renderer.setSize(window.innerWidth, window.innerHeight)
-const self = {}
+
 export default function () {
   const container = useRef()
+  const [view, setView] = useState(0)
   const [hotballAni, setHotballAni] = useState(0)
   const [clicked, setClicked] = useState([])
   useEffect(() => {
@@ -62,6 +72,9 @@ export default function () {
         }
         if (child.name === '汽车园区轨迹') {
           const line = child
+          // 隐藏线条
+          line.visible = false
+          // 
           // 根据点创建曲线
           const points = []
           for (let i = line.geometry.attributes.position.count - 1; i>=0; i--) {
@@ -78,6 +91,10 @@ export default function () {
         if (child.name === 'redcar') {
           self.redcar = child
         }
+      })
+      gltf.cameras.forEach((c) => {
+        // sence.add(c)
+        cameraDic[c.name] = c
       })
     })
     const hdrLoader = new RGBELoader()
@@ -132,23 +149,35 @@ export default function () {
     })
   }
 
+  function changeCamera() {
+    const idx = Math.floor(Math.random()*3)
+    const d = ['default', 'carcamera_Orientation', 'rightcamera_Orientation']
+    const name = d[idx]
+    setView(idx)
+    if (cameraDic[name]) {
+      self.camera = cameraDic[name]
+      self.camera.aspect = window.innerWidth / window.innerHeight;
+      self.camera.updateProjectionMatrix();
+    }
+  }
+
   function onWindowResize() {
     const width = window.innerWidth;
     const height = window.innerHeight;
     // raycaster只对mesh对象有感应，而导入的模型基本是group的，
     // 所以intersectObject的第二个参数必须为true，要检查后代才能拿到该模型。
     // 如果目标模型的同级模型干扰严重，也可以采用在模型外部新建一个透明的mesh进行包裹绑定
-    camera.aspect = width / height;//获得当前摄像机缩放比
-    camera.updateProjectionMatrix();//更新矩阵
+    self.camera.aspect = width / height;//获得当前摄像机缩放比
+    self.camera.updateProjectionMatrix();//更新矩阵
     renderer.setSize(width, height);
   }
 
   function refresh(time) {
     if (self.mixer) {
       const t = self.clock.getDelta()
-      self.mixer.update(t * 12)
+      self.mixer.update(t * 2)
     }
-    renderer.render(sence, camera)
+    renderer.render(sence, self.camera)
     window.requestAnimationFrame(refresh)
   }
 
@@ -158,7 +187,7 @@ export default function () {
     // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
     pointer.x = (e.clientX / window.innerWidth) * 2 -1
     pointer.y = -(e.clientY/window.innerHeight) * 2 +1 
-    raycaster.setFromCamera(pointer, camera)
+    raycaster.setFromCamera(pointer, self.camera)
     // 计算物体和射线的焦点
     const intersects = raycaster.intersectObjects( sence.children );
     // for (let i = 0; i < intersects.length; i++) {
@@ -185,6 +214,8 @@ export default function () {
       <div style={{background: 'rgba(255,255,255, .8)', cursor: 'pointer'}} onClick={toggleHotBallAction}>
         切换热气球动画(当前{hotballAni ? '环绕' : '横穿'})
       </div>
+      <div style={{height: '4px'}}></div>
+      <div style={{background: 'rgba(255,255,255, .8)', cursor: 'pointer'}} onClick={changeCamera}>切换视角(随机3种当前{view+1})</div>
     </div>
     
   </div>
