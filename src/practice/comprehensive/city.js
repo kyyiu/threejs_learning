@@ -150,7 +150,7 @@ export default function () {
   }
 
   function changeCamera() {
-    const idx = Math.floor(Math.random()*3)
+    const idx = (view+1)%3
     const d = ['default', 'carcamera_Orientation', 'rightcamera_Orientation']
     const name = d[idx]
     setView(idx)
@@ -215,7 +215,7 @@ export default function () {
         切换热气球动画(当前{hotballAni ? '环绕' : '横穿'})
       </div>
       <div style={{height: '4px'}}></div>
-      <div style={{background: 'rgba(255,255,255, .8)', cursor: 'pointer'}} onClick={changeCamera}>切换视角(随机3种当前{view+1})</div>
+      <div style={{background: 'rgba(255,255,255, .8)', cursor: 'pointer'}} onClick={changeCamera}>切换3种视角(当前{view+1})</div>
     </div>
     
   </div>
