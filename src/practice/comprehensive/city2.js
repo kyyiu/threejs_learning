@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import * as Three from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 
 const sence = new Three.Scene();
 const camera = new Three.PerspectiveCamera(
@@ -19,14 +22,71 @@ const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
 renderer.setSize(window.innerWidth, window.innerHeight)
 
+
+let self = {}
+
+class MeshLine {
+  constructor(geometry) {
+    const edges = new Three.EdgesGeometry(geometry);
+    this.material = new Three.LineBasicMaterial({ color: 0xffffff });
+    const line = new Three.LineSegments(edges, this.material);
+    this.geometry = edges;
+    this.mesh = line;
+  }
+}
+
+
 export default function() {
     const container = useRef()
   
     useEffect(() => {
+      init()
       window.addEventListener( 'resize', onWindowResize, false );//窗口变化监听
       container.current.appendChild(renderer.domElement)
       refresh()
     }, [])
+
+    function init() {
+      initBackground()
+      self.loader = new GLTFLoader()
+      const dracoLoader = new DRACOLoader()
+      dracoLoader.setDecoderPath('./draco/')
+      self.loader.setDRACOLoader(dracoLoader)
+      self.loader.load('/model/city2.glb', gltf => {
+        self.gltf = gltf
+
+        gltf.scene.traverse((item) => {
+          if (item.type == "Mesh") {
+            const cityMaterial = new Three.MeshBasicMaterial({
+              color: new Three.Color(0x0c0e33),
+            });
+            item.material = cityMaterial;
+            // modifyCityMaterial(item);
+            if (item.name == "Layerbuildings") {
+              const meshLine = new MeshLine(item.geometry);
+              const size = item.scale.x;
+              meshLine.mesh.scale.set(size, size, size);
+              sence.add(meshLine.mesh);
+            }
+          }
+        });
+
+        sence.add(gltf.scene)
+      })
+    }
+    function initBackground() {
+      const textures = new Three.CubeTextureLoader()
+      const texturesCube = textures.load([
+        require('./pics/1.jpg'),
+        require('./pics/2.jpg'),
+        require('./pics/3.jpg'),
+        require('./pics/4.jpg'),
+        require('./pics/5.jpg'),
+        require('./pics/6.jpg')
+      ])
+      sence.background = texturesCube
+      sence.environment = texturesCube
+    }
 
     function onWindowResize() {
       const width = window.innerWidth;
