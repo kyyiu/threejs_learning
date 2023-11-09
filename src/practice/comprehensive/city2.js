@@ -4,16 +4,16 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
-
+import modifyCityMaterial from "./utils/city2/modifyCityMaterial";
 const sence = new Three.Scene();
 const camera = new Three.PerspectiveCamera(
     75,
     window.innerWidth/window.innerHeight,
     0.1,
-    1000
+    10000
 )
 
-camera.position.set(0,0,10)
+camera.position.set(5,10,15)
 sence.add(camera)
 
 const renderer = new Three.WebGLRenderer()
@@ -56,12 +56,13 @@ export default function() {
         self.gltf = gltf
 
         gltf.scene.traverse((item) => {
+          console.log("LLL", item)
           if (item.type == "Mesh") {
             const cityMaterial = new Three.MeshBasicMaterial({
               color: new Three.Color(0x0c0e33),
             });
             item.material = cityMaterial;
-            // modifyCityMaterial(item);
+            modifyCityMaterial(item);
             if (item.name == "Layerbuildings") {
               const meshLine = new MeshLine(item.geometry);
               const size = item.scale.x;
