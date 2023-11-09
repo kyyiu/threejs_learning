@@ -23,7 +23,7 @@ const renderer = new Three.WebGLRenderer({
 })
 
 renderer.setSize(window.innerWidth, window.innerHeight)
-const self = {
+let self = {
   camera
 }
 
@@ -134,11 +134,17 @@ export default function () {
   }
 
   function carAni() {
+    if (!self.curve) {
+      return
+    }
     gsap.to(self, {
       curveProgress: 0.999,
       duration: 10,
       repeat: -1,
       onUpdate: () => {
+        if (!self.curve) {
+          return
+        }
         const point = self.curve.getPoint(self.curveProgress)
         self.redcar.position.set(point.x, point.y,point.z)
         if (self.curveProgress + 0.001 < 1) {
@@ -173,6 +179,9 @@ export default function () {
   }
 
   function refresh(time) {
+    if (!self.camera) {
+      return
+    }
     if (self.mixer) {
       const t = self.clock.getDelta()
       self.mixer.update(t * 2)

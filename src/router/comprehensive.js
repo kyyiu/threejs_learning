@@ -4,4 +4,5 @@ import { createRouteItem } from './tools/createItem'
 
 export const comprehensiveRoute = [
   createRouteItem("/city", lazy(() => import('../practice/comprehensive/city')), "城市", require('../assets/img/react_logo.png')),
+  createRouteItem("/city2", lazy(() => import('../practice/comprehensive/city2')), "城市2", require('../assets/img/react_logo.png'))
 ]
