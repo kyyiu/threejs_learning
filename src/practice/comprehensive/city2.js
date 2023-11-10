@@ -5,6 +5,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import modifyCityMaterial from "./utils/city2/modifyCityMaterial";
+import FlyLine from "./utils/city2/flyLine";
 const sence = new Three.Scene();
 const camera = new Three.PerspectiveCamera(
     75,
@@ -73,6 +74,10 @@ export default function() {
         });
 
         sence.add(gltf.scene)
+
+        // const flyLine = new FlyLine()
+        const flyLine = new FlyLine()
+        sence.add(flyLine.mesh)
       })
     }
     function initBackground() {

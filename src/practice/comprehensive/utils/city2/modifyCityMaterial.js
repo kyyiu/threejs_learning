@@ -12,7 +12,7 @@ export default function modifyCityMaterial(mesh) {
     `
     );
     addGradColor(shader, mesh);
-    // addSpread(shader);
+    addSpread(shader);
     // addLightLine(shader);
     // addToTopLine(shader);
   };
@@ -100,6 +100,7 @@ export function addSpread(shader, center = new THREE.Vector2(0, 0)) {
     `
      float spreadRadius = distance(vPosition.xz,uSpreadCenter);
     //  扩散范围的函数
+    // 根据 -x^2+b 函数 实现
     float spreadIndex = -(spreadRadius-uSpreadTime)*(spreadRadius-uSpreadTime)+uSpreadWidth;
 
     if(spreadIndex>0.0){
