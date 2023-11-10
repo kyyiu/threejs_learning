@@ -6,6 +6,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import modifyCityMaterial from "./utils/city2/modifyCityMaterial";
 import FlyLine from "./utils/city2/flyLine";
+import FlyLineShader from "./shader/city2/flyLine";
 const sence = new Three.Scene();
 const camera = new Three.PerspectiveCamera(
     75,
@@ -78,6 +79,8 @@ export default function() {
         // const flyLine = new FlyLine()
         const flyLine = new FlyLine()
         sence.add(flyLine.mesh)
+        const flyLineShader = new FlyLineShader()
+        sence.add(flyLineShader.mesh)
       })
     }
     function initBackground() {
