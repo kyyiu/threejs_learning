@@ -7,6 +7,7 @@ import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 import modifyCityMaterial from "./utils/city2/modifyCityMaterial";
 import FlyLine from "./utils/city2/flyLine";
 import FlyLineShader from "./shader/city2/flyLine";
+import LightWall from "./utils/city2/lightWall";
 const sence = new Three.Scene();
 const camera = new Three.PerspectiveCamera(
     75,
@@ -58,13 +59,13 @@ export default function() {
         self.gltf = gltf
 
         gltf.scene.traverse((item) => {
-          console.log("LLL", item)
           if (item.type == "Mesh") {
             const cityMaterial = new Three.MeshBasicMaterial({
               color: new Three.Color(0x0c0e33),
             });
             item.material = cityMaterial;
             modifyCityMaterial(item);
+            // 生成物体白框
             if (item.name == "Layerbuildings") {
               const meshLine = new MeshLine(item.geometry);
               const size = item.scale.x;
@@ -81,6 +82,9 @@ export default function() {
         sence.add(flyLine.mesh)
         const flyLineShader = new FlyLineShader()
         sence.add(flyLineShader.mesh)
+
+        const lightWall = new LightWall()
+        sence.add(lightWall.mesh)
       })
     }
     function initBackground() {

@@ -54,6 +54,7 @@ export default class FlyLineShader {
         varying float vSize;
         void main() {
           float distanceToCenter = distance(gl_PointCoord, vec2(0.5, 0.5));
+          // 横截面处理为圆形
           float strength = 1.0 - (distanceToCenter * 2.0);
           if (vSize <= 0.0) {
             gl_FragColor = vec4(1, 0, 0, 0);
@@ -69,7 +70,7 @@ export default class FlyLineShader {
     this.mesh = new THREE.Points(this.geometry, this.shaderMaterial)
     gsap.to(this.shaderMaterial.uniforms.uTime, {
       value: 1000,
-      duration: 1,
+      duration: 3,
       repeat: -1,
       ease: 'none'
     })
