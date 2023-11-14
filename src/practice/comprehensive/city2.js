@@ -8,6 +8,7 @@ import modifyCityMaterial from "./utils/city2/modifyCityMaterial";
 import FlyLine from "./utils/city2/flyLine";
 import FlyLineShader from "./shader/city2/flyLine";
 import LightWall from "./utils/city2/lightWall";
+import Radar from "./utils/city2/radar";
 const sence = new Three.Scene();
 const camera = new Three.PerspectiveCamera(
     75,
@@ -47,6 +48,9 @@ export default function() {
       window.addEventListener( 'resize', onWindowResize, false );//窗口变化监听
       container.current.appendChild(renderer.domElement)
       refresh()
+      return () => {
+        self = {}
+      }
     }, [])
 
     function init() {
@@ -85,6 +89,9 @@ export default function() {
 
         const lightWall = new LightWall()
         sence.add(lightWall.mesh)
+
+        const radar = new Radar()
+        sence.add(radar.mesh)
       })
     }
     function initBackground() {
