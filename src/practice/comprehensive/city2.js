@@ -9,6 +9,7 @@ import FlyLine from "./utils/city2/flyLine";
 import FlyLineShader from "./shader/city2/flyLine";
 import LightWall from "./utils/city2/lightWall";
 import Radar from "./utils/city2/radar";
+import Sign from "./utils/city2/sign";
 const sence = new Three.Scene();
 const camera = new Three.PerspectiveCamera(
     75,
@@ -92,6 +93,13 @@ export default function() {
 
         const radar = new Radar()
         sence.add(radar.mesh)
+
+        const sign = new Sign(camera)
+        sence.add(sign.mesh)
+        sign.onClick(function() {
+          console.log("TTT点击图标")
+          alert('点击图标')
+        })
       })
     }
     function initBackground() {
