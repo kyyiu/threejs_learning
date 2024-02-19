@@ -6,5 +6,6 @@ import { createRouteItem } from './tools/createItem'
 export const shaderRoute = [
   createRouteItem("/kaleidoscope", lazy(() => import('../practice/shader/kaleidoscope/kaleidoscope')), "shader实现万花筒效果", require('../assets/img/react_logo.png')),
   createRouteItem("/fire_work", lazy(() => import('../practice/shader/fireWork/fireWork')), "shader实现烟火效果", require('../assets/img/react_logo.png')),
-  createRouteItem("/falling", lazy(() => import('../practice/shader/falling/falling')), "飘落效果", require('../assets/img/react_logo.png'))
+  createRouteItem("/falling", lazy(() => import('../practice/shader/falling/falling')), "爱心", require('../assets/img/react_logo.png')),
+  createRouteItem("/sakura", lazy(() => import('../practice/shader/sakura/sakura')), "樱花", require('../assets/img/react_logo.png'))
 ]

@@ -47,6 +47,7 @@ export default function () {
     container.current.appendChild(renderer.domElement)
     refresh()
     return () => {
+      window.removeEventListener('resize', onWindowResize)
       self = {}
     }
   }, [])
