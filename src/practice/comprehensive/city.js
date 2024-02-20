@@ -61,7 +61,7 @@ export default function () {
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('./draco/')
     self.loader.setDRACOLoader(dracoLoader)
-    self.loader.load('/model/city4.glb', gltf => {
+    self.loader.load('/github_pages/threejs_learn/model/city4.glb', gltf => {
       self.gltf = gltf
       sence.add(gltf.scene)
       gltf.scene.traverse(child => {
